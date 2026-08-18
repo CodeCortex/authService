@@ -1,7 +1,9 @@
 package com.codecortex.auth.service;
 
 import com.codecortex.auth.entities.UserInfo;
+import com.codecortex.auth.model.UserInfoDto;
 import com.codecortex.auth.repository.UserRepository;
+import com.codecortex.auth.utils.ValidationUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.slf4j.Logger;
@@ -12,6 +14,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+
+import java.lang.foreign.SymbolLookup;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -39,6 +46,26 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         log.info("User Authenticated Successfully..!!!");
         return new CustomUserDetails(user);
+    }
+
+    public UserInfo checkIfUserAlreadyExist(UserInfoDto userInfoDto){
+        return userRepository.findByUsername(userInfoDto.getUsername());
+    }
+
+
+    public String signupUser(UserInfoDto userInfoDto){
+        ValidationUtil.validateUserAttributes(userInfoDto);
+
+        userInfoDto.setPassword(passwordEncoder.encode(userInfoDto.getPassword()));
+        if(Objects.nonNull(checkIfUserAlreadyExist(userInfoDto))){
+            return null;
+        }
+        String userId = UUID.randomUUID().toString();
+        UserInfo userInfo = new UserInfo(userId, userInfoDto.getUsername(), userInfoDto.getPassword(), new HashSet<>());
+        userRepository.save(userInfo);
+        // pushEventToQueue
+
+        return userId;
     }
 
 
