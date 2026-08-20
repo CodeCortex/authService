@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.lang.foreign.SymbolLookup;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
