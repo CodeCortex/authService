@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import java.lang.foreign.SymbolLookup;
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -66,6 +67,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         // pushEventToQueue
 
         return userId;
+    }
+
+    public String getUserByUsername(String userName){
+        return Optional.of(userRepository.findByUsername(userName)).map(UserInfo::getUserId).orElse(null);
     }
 
 
