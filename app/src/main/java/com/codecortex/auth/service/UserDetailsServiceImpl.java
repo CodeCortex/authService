@@ -1,6 +1,7 @@
 package com.codecortex.auth.service;
 
 import com.codecortex.auth.entities.UserInfo;
+import com.codecortex.auth.eventProducer.UserInfoProducer;
 import com.codecortex.auth.model.UserInfoDto;
 import com.codecortex.auth.repository.UserRepository;
 import com.codecortex.auth.utils.ValidationUtil;
@@ -31,6 +32,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private final UserInfoProducer userInfoProducer;
 
 
     private static final Logger log= LoggerFactory.getLogger(UserDetailsServiceImpl.class);
@@ -64,7 +68,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         String userId = UUID.randomUUID().toString();
         UserInfo userInfo = new UserInfo(userId, userInfoDto.getUsername(), userInfoDto.getPassword(), new HashSet<>());
         userRepository.save(userInfo);
+
         // pushEventToQueue
+        userInfoProducer.sendEventToKafka(userInfoDto);
 
         return userId;
     }
