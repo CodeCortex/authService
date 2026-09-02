@@ -33,8 +33,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private final UserInfoProducer userInfoProducer;
+//    @Autowired
+//    private final UserInfoProducer userInfoProducer;
 
 
     private static final Logger log= LoggerFactory.getLogger(UserDetailsServiceImpl.class);
@@ -70,7 +70,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userRepository.save(userInfo);
 
         // pushEventToQueue
-        userInfoProducer.sendEventToKafka(userInfoDto);
+//        userInfoProducer.sendEventToKafka(userInfoDto);
 
         return userId;
     }

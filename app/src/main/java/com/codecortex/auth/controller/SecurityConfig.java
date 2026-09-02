@@ -1,6 +1,7 @@
 package com.codecortex.auth.controller;
 
 import com.codecortex.auth.authsecurity.JwtAuthFilter;
+import com.codecortex.auth.eventProducer.UserInfoProducer;
 import com.codecortex.auth.repository.UserRepository;
 import com.codecortex.auth.service.UserDetailsServiceImpl;
 import lombok.Data;
@@ -35,6 +36,9 @@ public class SecurityConfig {
 
     @Autowired
     private final UserDetailsServiceImpl userDetailsServiceImpl;
+
+    @Autowired
+    private final UserInfoProducer userInfoProducer;
 
     @Bean
     @Autowired
