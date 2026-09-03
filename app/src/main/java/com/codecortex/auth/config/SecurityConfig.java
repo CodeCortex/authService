@@ -1,4 +1,4 @@
-package com.codecortex.auth.controller;
+package com.codecortex.auth.config;
 
 import com.codecortex.auth.authsecurity.JwtAuthFilter;
 import com.codecortex.auth.eventProducer.UserInfoProducer;
