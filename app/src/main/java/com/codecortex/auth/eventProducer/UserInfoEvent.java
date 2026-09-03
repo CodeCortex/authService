@@ -24,4 +24,6 @@ public class UserInfoEvent {
 
     private String userId;
 
+    private String profilePic;
+
 }

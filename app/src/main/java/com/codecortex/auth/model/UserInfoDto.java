@@ -27,4 +27,6 @@ public class UserInfoDto extends UserInfo {
 
     private String email; // email
 
+    private String profilePic;
+
 }

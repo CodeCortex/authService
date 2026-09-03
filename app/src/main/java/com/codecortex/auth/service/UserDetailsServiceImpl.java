@@ -1,6 +1,7 @@
 package com.codecortex.auth.service;
 
 import com.codecortex.auth.entities.UserInfo;
+import com.codecortex.auth.eventProducer.UserInfoEvent;
 import com.codecortex.auth.eventProducer.UserInfoProducer;
 import com.codecortex.auth.model.UserInfoDto;
 import com.codecortex.auth.repository.UserRepository;
@@ -33,8 +34,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private final PasswordEncoder passwordEncoder;
 
-//    @Autowired
-//    private final UserInfoProducer userInfoProducer;
+    @Autowired
+    private final UserInfoProducer userInfoProducer;
 
 
     private static final Logger log= LoggerFactory.getLogger(UserDetailsServiceImpl.class);
@@ -70,13 +71,25 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         userRepository.save(userInfo);
 
         // pushEventToQueue
-//        userInfoProducer.sendEventToKafka(userInfoDto);
+        userInfoProducer.sendEventToKafka(userInfoEventToPublish(userInfoDto,userId));
 
         return userId;
     }
 
     public String getUserByUsername(String userName){
         return Optional.of(userRepository.findByUsername(userName)).map(UserInfo::getUserId).orElse(null);
+    }
+
+    private UserInfoEvent userInfoEventToPublish(UserInfoDto userInfoDto, String userId){
+        return UserInfoEvent.builder()
+                .userId(userId)
+                .firstName(userInfoDto.getFirstName())
+                .lastName(userInfoDto.getLastName())
+                .email(userInfoDto.getEmail())
+                .phoneNumber(userInfoDto.getPhoneNumber())
+                .profilePic(userInfoDto.getProfilePic())
+                .build();
+
     }
 
 
